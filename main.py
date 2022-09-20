@@ -26,11 +26,21 @@ def change_word_check():
     flash_card.itemconfig(word, text=current_word)
     word_list = word_list.drop(word_list.index[word_list.French == current_word])
     change_language_french()
+    flash_card.after(3000, change_language_english)
 
-# TODO 1: Make the card change back to french every round
+# TODO 1: Make the card change back to french every round ---- DONE
 # TODO 2: Write code for change_word_x()
+    # TODO 2.1: Add unknown words to a dataframe (figure out best method to do this)
+    # TODO 2.2: Turn said dataframe into words_to_learn.csv when the program finishes or is closed
 
-# def change_word_x():
+
+def change_word_x():
+    global word_list
+    current_word = word_list["French"][randint(0, len(word_list) - 1)]
+    flash_card.itemconfig(word, text=current_word)
+    word_list = word_list.drop(word_list.index[word_list.French == current_word])
+    change_language_french()
+    flash_card.after(3000, change_language_english)
 
 # Create the UI
 window = Tk()
@@ -50,7 +60,7 @@ word = flash_card.create_text(400, 263,
 flash_card.grid(column=0, row=0, columnspan=2)
 
 x_image = PhotoImage(file="images/wrong.png")
-x_button = Button(image=x_image, highlightthickness=0)
+x_button = Button(image=x_image, highlightthickness=0, command=change_word_x)
 x_button.grid(column=0, row=1)
 
 check_image = PhotoImage(file="images/right.png")
