@@ -10,6 +10,8 @@ BACKGROUND_COLOR = "#B1DDC6"
 
 # TODO 1: Make the card change back to french every round ---- DONE
 # TODO 2: Write code for change_word_x()
+    # TODO Bug fix: Prevent it from picking the same word
+
     # TODO 2.1: Add unknown words to a dataframe (figure out best method to do this)
     # TODO 2.2: Turn said dataframe into words_to_learn.csv when the program finishes or is closed
 
