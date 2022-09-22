@@ -1,6 +1,6 @@
 from tkinter import Tk, Button, Canvas, PhotoImage
 from random import randint
-from pandas import read_csv
+from pandas import read_csv, DataFrame
 BACKGROUND_COLOR = "#B1DDC6"
 
 # flip card after 3 seconds
@@ -10,18 +10,26 @@ BACKGROUND_COLOR = "#B1DDC6"
 
 # TODO 1: Make the card change back to french every round ---- DONE
 # TODO 2: Write code for change_word_x()
-    # TODO Bug fix: Prevent it from picking the same word
+    # TODO Bug fix: Prevent it from picking the same word ---- DONE
 
     # TODO 2.1: Add unknown words to a dataframe (figure out best method to do this)
     # TODO 2.2: Turn said dataframe into words_to_learn.csv when the program finishes or is closed
 
-# TODO 3: Create pop-up box when opening application that triggers change_language_french()
+# TODO 3: Make it actually switch to the English word
+
+# TODO 4: Create pop-up box when opening application that triggers change_language_french()
     # OR come up with better way to trigger this at launch.
 
 # TODO Bug fix: deal with the key errors
 # TODO Bug fix: if you click a button before it changes to English, bad things happen.
 
 # AI for switching between languages
+
+word_list = read_csv("french_words.csv")
+words_to_learn = {
+    "French": [],
+    "English": []
+}
 
 def change_language_english():
     """Changes the language to english."""
@@ -31,7 +39,7 @@ def change_language_english():
 def change_language_french():
     """Changes the language to french.
     Removes the current word from the list and resets the flash card."""
-    word_list = read_csv("french_words.csv")
+    global word_list
     flash_card.itemconfig(language, text="French")
     flash_card.itemconfig(background, image=front)
     current_word = word_list["French"][randint(0, len(word_list) - 1)]
@@ -45,8 +53,18 @@ def change_word_check():
 
 def change_word_x():
     """Function for the X button."""
+    current_word = flash_card.itemcget("current_word", "text")
+    words_to_learn["French"].append(current_word)
+    # CONTINUE HERE. I was making it add the words to the dictionary.
+    # I might have to complete TODO 3 before I continue
     change_language_french()
     flash_card.after(3000, change_language_english)
+    print(words_to_learn)
+
+def end_of_session():
+    """Adds unknown words to a file new file called 'words_to_learn.csv'"""
+    words_to_learn_df = DataFrame.from_dict(words_to_learn)
+    words_to_learn_df.to_csv("words_to_learn.csv", index=False)
 
 # Create the UI
 
@@ -68,7 +86,7 @@ language = flash_card.create_text(400, 150, text="French", font=("Arial", 40, "i
 #     text=word_list["French"][randint(0, len(word_list) - 1)], font=("Arial", 60, "bold"))
 
 word = flash_card.create_text(400, 263,
-    text="", font=("Arial", 60, "bold"))
+    text="", font=("Arial", 60, "bold"), tag="current_word")
 
 flash_card.grid(column=0, row=0, columnspan=2)
 
