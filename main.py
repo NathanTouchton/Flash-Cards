@@ -1,6 +1,6 @@
 from tkinter import Tk, Button, Canvas, PhotoImage
 from random import randint
-from pandas import read_csv, DataFrame
+from pandas import read_csv, DataFrame, Series
 BACKGROUND_COLOR = "#B1DDC6"
 
 # flip card after 3 seconds
@@ -33,8 +33,12 @@ words_to_learn = {
 
 def change_language_english():
     """Changes the language to english."""
+    global word_list
     flash_card.itemconfig(language, text="English")
     flash_card.itemconfig(background, image=back)
+    current_word = flash_card.itemcget("current_word", "text")
+    current_word_index = word_list[word_list["French"] == current_word]
+    flash_card.itemconfig(word, text=word_list["English"][current_word_index])
 
 def change_language_french():
     """Changes the language to french.
