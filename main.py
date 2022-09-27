@@ -38,7 +38,9 @@ def change_language_english():
     flash_card.itemconfig(background, image=back)
     current_word = flash_card.itemcget("current_word", "text")
     current_word_index = word_list[word_list["French"] == current_word]
-    flash_card.itemconfig(word, text=word_list["English"][current_word_index])
+    print(current_word_index)
+    # WAIT!!!! This bug might be cause by the lack of a word in the canvas to begin with. Maybe.
+    # flash_card.itemconfig(word, text=word_list["English"][current_word_index])
 
 def change_language_french():
     """Changes the language to french.
@@ -53,7 +55,7 @@ def change_language_french():
 def change_word_check():
     """Function for the checkmark button."""
     change_language_french()
-    flash_card.after(3000, change_language_english)
+    # flash_card.after(3000, change_language_english)
 
 def change_word_x():
     """Function for the X button."""
@@ -102,6 +104,10 @@ check_image = PhotoImage(file="images/right.png")
 check_button = Button(image=check_image, highlightthickness=0, command=change_word_check)
 check_button.grid(column=1, row=1)
 
-flash_card.after(3000, change_language_english)
+# flash_card.after(3000, change_language_english)
+
+# current_word = flash_card.itemcget("current_word", "text")
+# current_word_index = word_list[word_list["French"] == current_word]
+# print(current_word_index)
 
 window.mainloop()
