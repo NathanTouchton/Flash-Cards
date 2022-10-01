@@ -1,6 +1,6 @@
-from tkinter import Tk, Button, Canvas, PhotoImage
+from tkinter import Tk, Button, Canvas, PhotoImage, messagebox
 from random import randint
-from pandas import read_csv, DataFrame, Series
+from pandas import read_csv, DataFrame
 BACKGROUND_COLOR = "#B1DDC6"
 
 # flip card after 3 seconds
@@ -22,6 +22,7 @@ BACKGROUND_COLOR = "#B1DDC6"
 
 # TODO Bug fix: deal with the key errors
 # TODO Bug fix: if you click a button before it changes to English, bad things happen.
+# TODO Bug fix: initial dialogue box opens in the background
 
 # AI for switching between languages
 
@@ -40,7 +41,7 @@ def change_language_english():
     current_word_index = WORD_LIST[WORD_LIST["French"] == current_word]
     print(current_word_index)
     # WAIT!!!! This bug might be cause by the lack of a word in the canvas to begin with. Maybe.
-    # flash_card.itemconfig(word, text=WORD_LIST["English"][current_word_index])
+    flash_card.itemconfig(word, text=WORD_LIST["English"][current_word_index])
 
 def change_language_french():
     """Changes the language to french.
@@ -55,7 +56,7 @@ def change_language_french():
 def change_word_check():
     """Function for the checkmark button."""
     change_language_french()
-    # flash_card.after(3000, change_language_english)
+    flash_card.after(3000, change_language_english)
 
 def change_word_x():
     """Function for the X button."""
@@ -71,6 +72,12 @@ def end_of_session():
     """Adds unknown words to a file new file called 'words_to_learn.csv'"""
     words_to_learn_df = DataFrame.from_dict(words_to_learn)
     words_to_learn_df.to_csv("words_to_learn.csv", index=False)
+
+def new_session():
+    confirm = messagebox.askokcancel(title="Welcome", message="Welcome. Click OK to continue.")
+    if confirm:
+        change_language_french()
+    confirm = False
 
 # Create the UI
 
@@ -94,6 +101,8 @@ language = flash_card.create_text(400, 150, text="French", font=("Arial", 40, "i
 word = flash_card.create_text(400, 263,
     text="", font=("Arial", 60, "bold"), tag="current_word")
 
+new_session()
+
 flash_card.grid(column=0, row=0, columnspan=2)
 
 x_image = PhotoImage(file="images/wrong.png")
@@ -104,7 +113,7 @@ check_image = PhotoImage(file="images/right.png")
 check_button = Button(image=check_image, highlightthickness=0, command=change_word_check)
 check_button.grid(column=1, row=1)
 
-# flash_card.after(3000, change_language_english)
+flash_card.after(3000, change_language_english)
 
 # current_word = flash_card.itemcget("current_word", "text")
 # current_word_index = WORD_LIST[WORD_LIST["French"] == current_word]
