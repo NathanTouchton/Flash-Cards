@@ -40,7 +40,8 @@ def change_language_english():
     current_word = flash_card.itemcget("current_word", "text")
     current_word_index = WORD_LIST[WORD_LIST["French"] == current_word]
     print(current_word_index)
-    # WAIT!!!! This bug might be cause by the lack of a word in the canvas to begin with. Maybe.
+    # Now I need to try making the French word the index. That might be the solution.
+        # Try using .loc
     flash_card.itemconfig(word, text=WORD_LIST["English"][current_word_index])
 
 def change_language_french():
@@ -51,11 +52,13 @@ def change_language_french():
     flash_card.itemconfig(background, image=front)
     current_word = WORD_LIST["French"][randint(0, len(WORD_LIST) - 1)]
     flash_card.itemconfig(word, text=current_word)
-    WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.French == current_word])
 
 def change_word_check():
     """Function for the checkmark button."""
+    global WORD_LIST
     change_language_french()
+    current_word = flash_card.itemcget("current_word", "text")
+    WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.French == current_word])
     flash_card.after(3000, change_language_english)
 
 def change_word_x():
@@ -74,6 +77,7 @@ def end_of_session():
     words_to_learn_df.to_csv("words_to_learn.csv", index=False)
 
 def new_session():
+    """This shows a popup window that enables some of the initial functionality."""
     confirm = messagebox.askokcancel(title="Welcome", message="Welcome. Click OK to continue.")
     if confirm:
         change_language_french()
@@ -114,9 +118,5 @@ check_button = Button(image=check_image, highlightthickness=0, command=change_wo
 check_button.grid(column=1, row=1)
 
 flash_card.after(3000, change_language_english)
-
-# current_word = flash_card.itemcget("current_word", "text")
-# current_word_index = WORD_LIST[WORD_LIST["French"] == current_word]
-# print(current_word_index)
 
 window.mainloop()
