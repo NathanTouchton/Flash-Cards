@@ -25,7 +25,7 @@ BACKGROUND_COLOR = "#B1DDC6"
 
 # AI for switching between languages
 
-word_list = read_csv("french_words.csv")
+WORD_LIST = read_csv("french_words.csv")
 words_to_learn = {
     "French": [],
     "English": []
@@ -33,24 +33,24 @@ words_to_learn = {
 
 def change_language_english():
     """Changes the language to english."""
-    global word_list
+    global WORD_LIST
     flash_card.itemconfig(language, text="English")
     flash_card.itemconfig(background, image=back)
     current_word = flash_card.itemcget("current_word", "text")
-    current_word_index = word_list[word_list["French"] == current_word]
+    current_word_index = WORD_LIST[WORD_LIST["French"] == current_word]
     print(current_word_index)
     # WAIT!!!! This bug might be cause by the lack of a word in the canvas to begin with. Maybe.
-    # flash_card.itemconfig(word, text=word_list["English"][current_word_index])
+    # flash_card.itemconfig(word, text=WORD_LIST["English"][current_word_index])
 
 def change_language_french():
     """Changes the language to french.
     Removes the current word from the list and resets the flash card."""
-    global word_list
+    global WORD_LIST
     flash_card.itemconfig(language, text="French")
     flash_card.itemconfig(background, image=front)
-    current_word = word_list["French"][randint(0, len(word_list) - 1)]
+    current_word = WORD_LIST["French"][randint(0, len(WORD_LIST) - 1)]
     flash_card.itemconfig(word, text=current_word)
-    word_list = word_list.drop(word_list.index[word_list.French == current_word])
+    WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.French == current_word])
 
 def change_word_check():
     """Function for the checkmark button."""
@@ -89,7 +89,7 @@ language = flash_card.create_text(400, 150, text="French", font=("Arial", 40, "i
 # The following line is placeholder for an outdated way of filling in
     # the text at launch. I'm not ready to delete it yet.
 # word = flash_card.create_text(400, 263,
-#     text=word_list["French"][randint(0, len(word_list) - 1)], font=("Arial", 60, "bold"))
+#     text=WORD_LIST["French"][randint(0, len(WORD_LIST) - 1)], font=("Arial", 60, "bold"))
 
 word = flash_card.create_text(400, 263,
     text="", font=("Arial", 60, "bold"), tag="current_word")
@@ -107,7 +107,7 @@ check_button.grid(column=1, row=1)
 # flash_card.after(3000, change_language_english)
 
 # current_word = flash_card.itemcget("current_word", "text")
-# current_word_index = word_list[word_list["French"] == current_word]
+# current_word_index = WORD_LIST[WORD_LIST["French"] == current_word]
 # print(current_word_index)
 
 window.mainloop()
