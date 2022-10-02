@@ -38,16 +38,16 @@ def change_language_english():
     flash_card.itemconfig(language, text="English")
     flash_card.itemconfig(background, image=back)
     current_word = flash_card.itemcget("current_word", "text")
-    current_word_index = WORD_LIST[WORD_LIST["French"] == current_word]
+    WORD_LIST.set_index("French", inplace=True)
+    current_word_index = WORD_LIST.loc[current_word, "English"]
     print(current_word_index)
-    # Now I need to try making the French word the index. That might be the solution.
-        # Try using .loc
-    flash_card.itemconfig(word, text=WORD_LIST["English"][current_word_index])
+    flash_card.itemconfig(word, text=current_word_index)
 
 def change_language_french():
     """Changes the language to french.
     Removes the current word from the list and resets the flash card."""
     global WORD_LIST
+    WORD_LIST.reset_index(inplace=True)
     flash_card.itemconfig(language, text="French")
     flash_card.itemconfig(background, image=front)
     current_word = WORD_LIST["French"][randint(0, len(WORD_LIST) - 1)]
