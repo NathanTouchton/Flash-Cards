@@ -42,13 +42,12 @@ def change_language_english():
     current_word_index = WORD_LIST.loc[current_word, "English"]
     print(current_word_index)
     flash_card.itemconfig(word, text=current_word_index)
+    WORD_LIST.reset_index(inplace=True)
 
 def change_language_french():
-    """Changes the language to french.
-    Removes the current word from the list and resets the flash card."""
+    """Changes the language to French"""
     # The words aren't being deleted properly
     global WORD_LIST
-    WORD_LIST.reset_index(inplace=True)
     flash_card.itemconfig(language, text="French")
     flash_card.itemconfig(background, image=front)
     current_word = WORD_LIST["French"][randint(0, len(WORD_LIST) - 1)]
@@ -57,9 +56,10 @@ def change_language_french():
 def change_word_check():
     """Function for the checkmark button."""
     global WORD_LIST
-    change_language_french()
     current_word = flash_card.itemcget("current_word", "text")
-    WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.French == current_word])
+    WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
+    # WORD_LIST = WORD_LIST.drop(WORD_LIST.index)
+    change_language_french()
     flash_card.after(3000, change_language_english)
 
 def change_word_x():
