@@ -46,6 +46,7 @@ def change_language_english():
 def change_language_french():
     """Changes the language to french.
     Removes the current word from the list and resets the flash card."""
+    # The words aren't being deleted properly
     global WORD_LIST
     WORD_LIST.reset_index(inplace=True)
     flash_card.itemconfig(language, text="French")
