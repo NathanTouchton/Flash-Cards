@@ -15,7 +15,7 @@ BACKGROUND_COLOR = "#B1DDC6"
     # TODO 2.1: Add unknown words to a dataframe (figure out best method to do this)
     # TODO 2.2: Turn said dataframe into words_to_learn.csv when the program finishes or is closed
 
-# TODO 3: Make it actually switch to the English word
+# TODO 3: Make it actually switch to the English word ---- DONE
 
 # TODO 4: Create pop-up box when opening application that triggers change_language_french()
     # OR come up with better way to trigger this at launch.
@@ -40,7 +40,6 @@ def change_language_english():
     current_word = flash_card.itemcget("current_word", "text")
     WORD_LIST.set_index("French", inplace=True)
     current_word_index = WORD_LIST.loc[current_word, "English"]
-    print(current_word_index)
     flash_card.itemconfig(word, text=current_word_index)
     WORD_LIST.reset_index(inplace=True)
 
@@ -58,16 +57,18 @@ def change_word_check():
     global WORD_LIST
     current_word = flash_card.itemcget("current_word", "text")
     WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
-    # WORD_LIST = WORD_LIST.drop(WORD_LIST.index)
     change_language_french()
     flash_card.after(3000, change_language_english)
 
 def change_word_x():
     """Function for the X button."""
     current_word = flash_card.itemcget("current_word", "text")
-    words_to_learn["French"].append(current_word)
-    # CONTINUE HERE. I was making it add the words to the dictionary.
-    # I might have to complete TODO 3 before I continue
+    # Possibly create if statement for checking whether the word is English or French
+    # I also need to make it add the word for the other language
+    if WORD_LIST["English"].isin([current_word]).any():
+        words_to_learn["English"].append(current_word)
+    elif WORD_LIST["French"].isin([current_word]).any():
+        words_to_learn["French"].append(current_word)
     change_language_french()
     flash_card.after(3000, change_language_english)
     print(words_to_learn)
