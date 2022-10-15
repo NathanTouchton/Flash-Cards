@@ -57,6 +57,7 @@ def change_word_check():
     global WORD_LIST
     current_word = flash_card.itemcget("current_word", "text")
     WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
+    # Not working dur to index numbers not changing. 
     change_language_french()
     flash_card.after(3000, change_language_english)
 
