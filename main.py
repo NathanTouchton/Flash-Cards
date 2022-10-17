@@ -22,8 +22,7 @@ BACKGROUND_COLOR = "#B1DDC6"
 # TODO 4: Create pop-up box when opening application that triggers change_language_french()
     # OR come up with better way to trigger this at launch. ---- DONE
 
-# TODO 5: Use "words_to_learn.csv" to create the WORD_LIST at launch, if it exists.
-    # FileNotFoundError
+# TODO 5: Use "words_to_learn.csv" to create the WORD_LIST at launch, if it exists. ---- DONE
 
 # TODO Bug fix: deal with the key errors ---- DONE
 # TODO Bug fix: if you click a button before it changes to English, bad things happen.
