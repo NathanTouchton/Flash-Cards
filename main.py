@@ -14,21 +14,28 @@ BACKGROUND_COLOR = "#B1DDC6"
 
     # TODO 2.1: Add unknown words to a dataframe (figure out best method to do this) ---- DONE
     # TODO 2.2: Turn said dataframe into words_to_learn.csv when the program finishes or is closed
-    
+
     # ValueError is what I'm looking for
 
 # TODO 3: Make it actually switch to the English word ---- DONE
 
 # TODO 4: Create pop-up box when opening application that triggers change_language_french()
-    # OR come up with better way to trigger this at launch.
+    # OR come up with better way to trigger this at launch. ---- DONE
 
-# TODO Bug fix: deal with the key errors
+# TODO 5: Use "words_to_learn.csv" to create the WORD_LIST at launch, if it exists.
+    # FileNotFoundError
+
+# TODO Bug fix: deal with the key errors ---- DONE
 # TODO Bug fix: if you click a button before it changes to English, bad things happen.
 # TODO Bug fix: initial dialogue box opens in the background
 
 # AI for switching between languages
 
-WORD_LIST = read_csv("french_words.csv")
+try:
+    WORD_LIST = read_csv("words_to_learn.csv")
+except FileNotFoundError:
+    WORD_LIST = read_csv("french_words.csv")
+
 words_to_learn = {
     "French": [],
     "English": []
@@ -56,46 +63,54 @@ def change_language_french():
 def change_word_check():
     """Function for the checkmark button."""
     global WORD_LIST
-    current_word = flash_card.itemcget("current_word", "text")
-    WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
-    WORD_LIST.reset_index(inplace=True)
-    change_language_french()
-    flash_card.after(3000, change_language_english)
+    try:
+        current_word = flash_card.itemcget("current_word", "text")
+        WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
+        WORD_LIST.reset_index(inplace=True)
+        change_language_french()
+        flash_card.after(3000, change_language_english)
+    except ValueError:
+        end_of_session()
 
 def change_word_x():
     """Function for the X button."""
     global WORD_LIST
     current_word = flash_card.itemcget("current_word", "text")
-    # It's not deleting the words from WORD_LIST
-    if WORD_LIST["English"].isin([current_word]).any():
-        words_to_learn["English"].append(current_word)
+    try:
+        if WORD_LIST["English"].isin([current_word]).any():
+            words_to_learn["English"].append(current_word)
 
-        WORD_LIST.set_index("English", inplace=True)
-        current_word_index = WORD_LIST.loc[current_word, "French"]
-        words_to_learn["French"].append(current_word_index)
-        WORD_LIST.reset_index(inplace=True)
-        WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
-        WORD_LIST.reset_index(inplace=True)
+            WORD_LIST.set_index("English", inplace=True)
+            current_word_index = WORD_LIST.loc[current_word, "French"]
+            words_to_learn["French"].append(current_word_index)
+            WORD_LIST.reset_index(inplace=True)
+            WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
+            WORD_LIST.reset_index(inplace=True)
 
-    elif WORD_LIST["French"].isin([current_word]).any():
-        words_to_learn["French"].append(current_word)
-        current_word_index = WORD_LIST.index[WORD_LIST.French == current_word]
+        elif WORD_LIST["French"].isin([current_word]).any():
+            words_to_learn["French"].append(current_word)
+            current_word_index = WORD_LIST.index[WORD_LIST.French == current_word]
 
-        WORD_LIST.set_index("French", inplace=True)
-        current_word_index = WORD_LIST.loc[current_word, "English"]
-        words_to_learn["English"].append(current_word_index)
-        WORD_LIST.reset_index(inplace=True)
-        WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.French == current_word])
-        WORD_LIST.reset_index(inplace=True)
+            WORD_LIST.set_index("French", inplace=True)
+            current_word_index = WORD_LIST.loc[current_word, "English"]
+            words_to_learn["English"].append(current_word_index)
+            WORD_LIST.reset_index(inplace=True)
+            WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.French == current_word])
+            WORD_LIST.reset_index(inplace=True)
 
-    change_language_french()
-    flash_card.after(3000, change_language_english)
-    # print(words_to_learn)
+        change_language_french()
+        flash_card.after(3000, change_language_english)
+        # print(words_to_learn)
+    except ValueError:
+        end_of_session()
 
 def end_of_session():
     """Adds unknown words to a file new file called 'words_to_learn.csv'"""
     words_to_learn_df = DataFrame.from_dict(words_to_learn)
     words_to_learn_df.to_csv("words_to_learn.csv", index=False)
+    messagebox.showinfo(title="End of session", message="""There are no more words to study\n
+        Closing application""")
+    window.destroy()
 
 def new_session():
     """This shows a popup window that enables some of the initial functionality."""
@@ -117,11 +132,6 @@ flash_card = Canvas(width=800, height=526)
 
 background = flash_card.create_image(400, 263, image=front)
 language = flash_card.create_text(400, 150, text="French", font=("Arial", 40, "italic"))
-
-# The following line is placeholder for an outdated way of filling in
-    # the text at launch. I'm not ready to delete it yet.
-# word = flash_card.create_text(400, 263,
-#     text=WORD_LIST["French"][randint(0, len(WORD_LIST) - 1)], font=("Arial", 60, "bold"))
 
 word = flash_card.create_text(400, 263,
     text="", font=("Arial", 60, "bold"), tag="current_word")
