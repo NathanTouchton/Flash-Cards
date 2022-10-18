@@ -40,6 +40,8 @@ words_to_learn = {
     "English": []
 }
 
+# english_change = flash_card.after(3000, change_language_english)
+
 def change_language_english():
     """Changes the language to english."""
     global WORD_LIST
@@ -50,6 +52,17 @@ def change_language_english():
     current_word_index = WORD_LIST.loc[current_word, "English"]
     flash_card.itemconfig(word, text=current_word_index)
     WORD_LIST.reset_index(inplace=True)
+
+# def change_language_english():
+#     """Changes the language to english."""
+#     global WORD_LIST
+#     flash_card.itemconfig(language, text="English")
+#     flash_card.itemconfig(background, image=back)
+#     current_word = flash_card.itemcget("current_word", "text")
+#     WORD_LIST.set_index("French", inplace=True)
+#     current_word_index = WORD_LIST.loc[current_word, "English"]
+#     flash_card.itemconfig(word, text=current_word_index)
+#     WORD_LIST.reset_index(inplace=True)
 
 def change_language_french():
     """Changes the language to French"""
@@ -62,6 +75,12 @@ def change_language_french():
 def change_word_check():
     """Function for the checkmark button."""
     global WORD_LIST
+    # global after_id
+    # try:
+    #     flash_card.after_cancel(after_id)
+    # except NameError:
+    #     pass
+
     try:
         current_word = flash_card.itemcget("current_word", "text")
         WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
@@ -74,6 +93,7 @@ def change_word_check():
 def change_word_x():
     """Function for the X button."""
     global WORD_LIST
+    # global after_id
     current_word = flash_card.itemcget("current_word", "text")
     try:
         if WORD_LIST["English"].isin([current_word]).any():
@@ -105,10 +125,10 @@ def change_word_x():
 
 def end_of_session():
     """Adds unknown words to a file new file called 'words_to_learn.csv'"""
-    words_to_learn_df = DataFrame.from_dict(words_to_learn)
-    words_to_learn_df.to_csv("words_to_learn.csv", index=False)
-    messagebox.showinfo(title="End of session", message="""There are no more words to study\n
-        Closing application""")
+    # words_to_learn_df = DataFrame.from_dict(words_to_learn)
+    # words_to_learn_df.to_csv("words_to_learn.csv", index=False)
+    # messagebox.showinfo(title="End of session", message="""There are no more words to study\n
+    #     Closing application""")
     window.destroy()
 
 def new_session():
