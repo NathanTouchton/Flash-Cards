@@ -84,6 +84,8 @@ def change_word_check():
     try:
         current_word = flash_card.itemcget("current_word", "text")
         WORD_LIST = WORD_LIST.drop(WORD_LIST.index[WORD_LIST.English == current_word])
+        # The issue is the line below, specifically the 3rd time through.
+        # It might be adding level_0 as a new column/series.
         WORD_LIST.reset_index(inplace=True)
         change_language_french()
         flash_card.after(3000, change_language_english)
