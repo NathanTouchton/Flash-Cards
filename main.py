@@ -115,7 +115,7 @@ def change_word_x():
 
         change_language_french()
         english_change = flash_card.after(3000, change_language_english)
-        print(words_to_learn)
+        # print(words_to_learn)
     except ValueError:
         end_of_session()
 
